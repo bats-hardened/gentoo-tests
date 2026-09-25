@@ -14,10 +14,6 @@ It assumes:
 Run this from the host:
 
 ```bash
-docker pull \
-  gentoo/portage:latest \
-  gentoo/stage3:latest
-
 docker run --rm \
   -v "$PWD/gentoo-portage:/target" \
   gentoo/portage:latest \
@@ -47,20 +43,21 @@ EOF
 
 The persistent `gentoo-bats` container is now configured and stopped.
 
-The local overlay is mounted at:
+## Start the test container
 
-```text
-/var/db/repos/local
+Start and attach to the existing container:
+
+```bash
+docker start -ai gentoo-bats
 ```
 
-The ebuild is therefore available as:
+Leave the container normally with `exit`. The container is stopped but not deleted.
 
-```text
-/var/db/repos/local/dev-util/bats/bats-9999.ebuild
-```
+The `gentoo-bats` container retains `/etc/portage`, installed packages, Portage
+state, and build/test dependencies.
 
-Edits made to the files in this directory on the host are immediately visible
-inside the container.
+The overlay and Gentoo repository snapshot remain stored below this directory
+on the host.
 
 ## Test the ebuild
 
@@ -78,22 +75,6 @@ To inspect the dependency/build plan without merging:
 ```bash
 FEATURES=test emerge -pv =dev-util/bats-9999
 ```
-
-## Start the test container
-
-Start and attach to the existing container:
-
-```bash
-docker start -ai gentoo-bats
-```
-
-Leave the container normally with `exit`. The container is stopped but not deleted.
-
-The `gentoo-bats` container retains `/etc/portage`, installed packages, Portage
-state, and build/test dependencies.
-
-The overlay and Gentoo repository snapshot remain stored below this directory
-on the host.
 
 ## Re-test after changing the ebuild
 
