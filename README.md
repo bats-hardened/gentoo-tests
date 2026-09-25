@@ -6,10 +6,8 @@ This directory is a small local Gentoo overlay for testing the live
 It assumes:
 
 - Docker is installed and working.
-- No Gentoo Docker containers or volumes have been created yet.
-
-The setup follows Gentoo's documented use of `gentoo/portage` as a
-`/var/db/repos/gentoo` data volume together with `gentoo/stage3`.
+- The current working directory is this repositories root.
+- No Gentoo Docker containers or local Portage snapshot directory have been created yet.
 
 ## First-time setup
 
@@ -21,15 +19,14 @@ docker pull \
   gentoo/stage3:latest
 
 docker run --rm \
-  -v "$PWD/gentoo-portage:/var/db/repos/gentoo" \
+  -v "$PWD/gentoo-portage:/target" \
   gentoo/portage:latest \
-  /bin/true
+  cp -a /var/db/repos/gentoo/. /target/
 
 docker run -it \
   --name gentoo-bats \
-  --volumes-from gentoo-portage \
   -v "$PWD/gentoo-portage:/var/db/repos/gentoo" \
-  -v "$PWD/bats-core/gentoo-overlay:/var/db/repos/local" \
+  -v "$PWD:/var/db/repos/local" \
   gentoo/stage3:latest \
   bash -lc '
     mkdir -p /etc/portage/repos.conf /etc/portage/package.accept_keywords
@@ -45,10 +42,14 @@ EOF
 
     exec bash
   '
+
+docker image rm \
+  gentoo/stage3:latest
 ```
 
-You are now inside the persistent `gentoo-bats` container. The local overlay is
-mounted at:
+You are now inside the persistent `gentoo-bats` container.
+
+The local overlay is mounted at:
 
 ```text
 /var/db/repos/local
@@ -60,9 +61,8 @@ The ebuild is therefore available as:
 /var/db/repos/local/dev-util/bats/bats-9999.ebuild
 ```
 
-The overlay itself remains on the host, so edits made to
-`gentoo-overlay/dev-util/bats/bats-9999.ebuild` are immediately visible inside
-the container.
+Edits made to the files in this directory on the host are immediately visible
+inside the container.
 
 ## Test the ebuild
 
@@ -97,18 +97,11 @@ Re-enter the same container from the host:
 docker start -ai gentoo-bats
 ```
 
-Do **not** use `docker run --rm ...` for subsequent sessions. That would create
-a fresh disposable container and lose `/etc/portage`, installed packages, and
-other container state.
+The `gentoo-bats` container retains `/etc/portage`, installed packages, Portage
+state, and build/test dependencies.
 
-The `gentoo-bats` container retains:
-
-- `/etc/portage` configuration
-- installed packages
-- Portage state
-- build/test dependencies
-
-The overlay itself remains persistently stored on the host.
+The overlay and Gentoo repository snapshot remain stored below this directory
+on the host.
 
 ## Re-test after changing the ebuild
 
@@ -121,7 +114,7 @@ FEATURES=test emerge -v =dev-util/bats-9999
 Since this is a live `9999` ebuild using `git-r3`, Portage fetches the current
 upstream Git state as part of the build.
 
-If you want to force a completely clean package build first:
+To force a clean package build first:
 
 ```bash
 ebuild /var/db/repos/local/dev-util/bats/bats-9999.ebuild clean
@@ -130,17 +123,14 @@ FEATURES=test emerge -v =dev-util/bats-9999
 
 ## Refresh the Gentoo repository snapshot
 
-The `gentoo-portage` container holds the repository snapshot from the
-`gentoo/portage:latest` image that existed when it was created.
-
-To replace the whole test environment with current images, remove both
-containers and recreate them using the first-time setup above:
+To recreate the test environment using the current Gentoo images:
 
 ```bash
-docker rm -f gentoo-bats gentoo-portage
-docker pull gentoo/portage:latest gentoo/stage3:latest
+docker rm -f gentoo-bats 2>/dev/null || true
+rm -rf gentoo-portage
 ```
 
-Then run the **First-time setup** commands again.
+Then repeat the **First-time setup** commands.
 
-Removing these containers does not affect the local overlay.
+Removing the container and `gentoo-portage` directory does not affect the
+overlay files themselves.
