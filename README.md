@@ -31,10 +31,7 @@ docker container create -it \
   gentoo/stage3:latest
 
 docker start gentoo-bats
-
-docker exec gentoo-bats \
-  env FEATURES=test emerge --onlydeps -v =dev-util/bats-9999
-
+docker exec gentoo-bats env FEATURES=test emerge --onlydeps -v =dev-util/bats-9999
 docker stop gentoo-bats
 ```
 
