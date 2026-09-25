@@ -22,7 +22,7 @@ docker run --rm \
 docker image rm \
   gentoo/portage:latest
 
-docker container create \
+docker container create -it \
   --name gentoo-bats \
   -v "$PWD/etc-portage/repos.conf/local.conf:/etc/portage/repos.conf/local.conf" \
   -v "$PWD/etc-portage/package.accept_keywords/bats:/etc/portage/package.accept_keywords/bats" \
