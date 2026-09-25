@@ -23,7 +23,10 @@ docker run --rm \
   gentoo/portage:latest \
   cp -a /var/db/repos/gentoo/. /target/
 
-docker run -it \
+docker image rm \
+  gentoo/portage:latest
+
+docker run \
   --name gentoo-bats \
   -v "$PWD/gentoo-portage:/var/db/repos/gentoo" \
   -v "$PWD:/var/db/repos/local" \
@@ -39,15 +42,10 @@ auto-sync = no
 EOF
 
     echo "=dev-util/bats-9999 **" > /etc/portage/package.accept_keywords/bats
-
-    exec bash
   '
-
-docker image rm \
-  gentoo/stage3:latest
 ```
 
-You are now inside the persistent `gentoo-bats` container.
+The persistent `gentoo-bats` container is now configured and stopped.
 
 The local overlay is mounted at:
 
@@ -81,21 +79,15 @@ To inspect the dependency/build plan without merging:
 FEATURES=test emerge -pv =dev-util/bats-9999
 ```
 
-## Leave and return later
+## Start the test container
 
-Leave the container normally:
-
-```bash
-exit
-```
-
-The container is stopped but not deleted.
-
-Re-enter the same container from the host:
+Start and attach to the existing container:
 
 ```bash
 docker start -ai gentoo-bats
 ```
+
+Leave the container normally with `exit`. The container is stopped but not deleted.
 
 The `gentoo-bats` container retains `/etc/portage`, installed packages, Portage
 state, and build/test dependencies.
