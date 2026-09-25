@@ -20,15 +20,15 @@ docker pull \
   gentoo/portage:latest \
   gentoo/stage3:latest
 
-docker create \
-  -v /var/db/repos/gentoo \
-  --name gentoo-portage \
+docker run --rm \
+  -v "$PWD/gentoo-portage:/var/db/repos/gentoo" \
   gentoo/portage:latest \
   /bin/true
 
 docker run -it \
   --name gentoo-bats \
   --volumes-from gentoo-portage \
+  -v "$PWD/gentoo-portage:/var/db/repos/gentoo" \
   -v "$PWD/bats-core/gentoo-overlay:/var/db/repos/local" \
   gentoo/stage3:latest \
   bash -lc '
