@@ -6,11 +6,6 @@ This directory is a small local Gentoo overlay for testing the live
 It assumes:
 
 - Docker is installed and working.
-- This repository is at `~/development/github/bats-core`.
-- The overlay already contains:
-  - `metadata/layout.conf`
-  - `profiles/repo_name`
-  - `dev-util/bats/bats-9999.ebuild`
 - No Gentoo Docker containers or volumes have been created yet.
 
 The setup follows Gentoo's documented use of `gentoo/portage` as a
@@ -21,7 +16,9 @@ The setup follows Gentoo's documented use of `gentoo/portage` as a
 Run this from the host:
 
 ```bash
-docker pull gentoo/portage:latest gentoo/stage3:latest
+docker pull \
+  gentoo/portage:latest \
+  gentoo/stage3:latest
 
 docker create \
   -v /var/db/repos/gentoo \
@@ -32,7 +29,7 @@ docker create \
 docker run -it \
   --name gentoo-bats \
   --volumes-from gentoo-portage \
-  -v "$HOME/development/github/bats-core/gentoo-overlay:/var/db/repos/local" \
+  -v "$PWD/bats-core/gentoo-overlay:/var/db/repos/local" \
   gentoo/stage3:latest \
   bash -lc '
     mkdir -p /etc/portage/repos.conf /etc/portage/package.accept_keywords
@@ -146,5 +143,4 @@ docker pull gentoo/portage:latest gentoo/stage3:latest
 
 Then run the **First-time setup** commands again.
 
-Removing these containers does not affect the local overlay under
-`~/development/github/bats-core/gentoo-overlay`.
+Removing these containers does not affect the local overlay.
