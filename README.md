@@ -6,7 +6,7 @@ This directory is a small local Gentoo overlay for testing the live
 It assumes:
 
 - Docker is installed and working.
-- The current working directory is this repositories root.
+- The current working directory is this repository's root.
 - No Gentoo Docker containers or local Portage snapshot directory have been created yet.
 
 ## First-time setup
