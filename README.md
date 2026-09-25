@@ -29,9 +29,17 @@ docker container create -it \
   -v "$PWD/gentoo-portage:/var/db/repos/gentoo" \
   -v "$PWD/local_overlay:/var/db/repos/local" \
   gentoo/stage3:latest
+
+docker start gentoo-bats
+
+docker exec gentoo-bats \
+  env FEATURES=test emerge --onlydeps -v =dev-util/bats-9999
+
+docker stop gentoo-bats
 ```
 
-The persistent `gentoo-bats` container is now configured and stopped.
+The persistent `gentoo-bats` container is now configured with the ebuild's
+build and test dependencies installed, and stopped.
 
 ## Start the test container
 
