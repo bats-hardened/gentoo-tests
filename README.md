@@ -1,7 +1,7 @@
-# Testing `dev-util/bats-9999` with Gentoo Docker images
+# Testing `local_overlay/dev-util` with Gentoo Docker images
 
 This directory is a small local Gentoo overlay for testing the live
-`dev-util/bats-9999` ebuild against the current `bats-core` development branch.
+`local_overlay/dev-util` ebuild against the current `bats-core` development branch.
 
 It assumes:
 
@@ -22,23 +22,13 @@ docker run --rm \
 docker image rm \
   gentoo/portage:latest
 
-docker run \
+docker container create \
   --name gentoo-bats \
+  -v "$PWD/etc-portage/repos.conf/local.conf:/etc/portage/repos.conf/local.conf" \
+  -v "$PWD/etc-portage/package.accept_keywords/bats:/etc/portage/package.accept_keywords/bats" \
   -v "$PWD/gentoo-portage:/var/db/repos/gentoo" \
   -v "$PWD:/var/db/repos/local" \
-  gentoo/stage3:latest \
-  bash -lc '
-    mkdir -p /etc/portage/repos.conf /etc/portage/package.accept_keywords
-
-    cat > /etc/portage/repos.conf/local.conf <<EOF
-[local]
-location = /var/db/repos/local
-masters = gentoo
-auto-sync = no
-EOF
-
-    echo "=dev-util/bats-9999 **" > /etc/portage/package.accept_keywords/bats
-  '
+  gentoo/stage3:latest
 ```
 
 The persistent `gentoo-bats` container is now configured and stopped.
