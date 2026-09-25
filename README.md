@@ -27,7 +27,7 @@ docker container create -it \
   -v "$PWD/etc-portage/repos.conf/local.conf:/etc/portage/repos.conf/local.conf" \
   -v "$PWD/etc-portage/package.accept_keywords/bats:/etc/portage/package.accept_keywords/bats" \
   -v "$PWD/gentoo-portage:/var/db/repos/gentoo" \
-  -v "$PWD:/var/db/repos/local" \
+  -v "$PWD/local_overlay:/var/db/repos/local" \
   gentoo/stage3:latest
 ```
 
