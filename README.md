@@ -76,7 +76,7 @@ FEATURES=test emerge -pv =dev-util/bats-9999
 Edit the ebuild on the host and then, inside `gentoo-bats`, run:
 
 ```bash
-FEATURES=test emerge -v =dev-util/bats-9999
+ebuild /var/db/repos/local/dev-util/bats/bats-9999.ebuild manifest
 ```
 
 Since this is a live `9999` ebuild using `git-r3`, Portage fetches the current
