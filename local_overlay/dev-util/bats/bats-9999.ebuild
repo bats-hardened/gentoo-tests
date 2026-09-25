@@ -8,10 +8,10 @@ inherit git-r3 multiprocessing optfeature
 MY_PN="bats-core"
 DESCRIPTION="Bats-core: Bash Automated Testing System"
 HOMEPAGE="https://github.com/bats-core/bats-core/"
-# EGIT_REPO_URI="https://github.com/bats-core/bats-core.git"
-# EGIT_BRANCH="master"
-EGIT_REPO_URI="https://github.com/bats-hardened/bats-core.git"
-EGIT_BRANCH="PR-review/fork/henning-schild/henning/staging0.ALTERNATIVE.new"
+EGIT_REPO_URI="https://github.com/bats-core/bats-core.git"
+EGIT_BRANCH="master"
+# EGIT_REPO_URI="https://github.com/bats-hardened/bats-core.git"
+# EGIT_BRANCH="PR-review/fork/henning-schild/henning/staging0.ALTERNATIVE.new"
 
 LICENSE="MIT"
 SLOT="0"
@@ -21,13 +21,14 @@ RDEPEND="${DEPEND}"
 
 src_test() {
 	local my_jobs=$(get_nproc)
-	if ! command -v parallel >/dev/null; then
-		my_jobs=1
-	fi
+	# if ! command -v parallel >/dev/null; then
+	# 	my_jobs=1
+	# fi
+	bin/bats --tap --jobs "${my_jobs}" test || die "Tests failed"
 	# see https://github.com/bats-core/bats-core/issues/1225
 	# BATS_NUMBER_OF_PARALLEL_JOBS should be the same as "--jobs" as we had before
 	# but turns out they are not so testing like upstream does
-	BATS_NUMBER_OF_PARALLEL_JOBS="${my_jobs}" bin/bats --tap test || die "Tests failed"
+	# BATS_NUMBER_OF_PARALLEL_JOBS="${my_jobs}" bin/bats --tap test || die "Tests failed"
 }
 
 src_install() {
