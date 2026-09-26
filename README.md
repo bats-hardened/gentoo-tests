@@ -31,13 +31,12 @@ docker container create -it \
   gentoo/stage3:latest
 
 docker start gentoo-bats
-docker exec gentoo-bats emerge --getbinpkg -v sys-process/parallel
 docker exec gentoo-bats emerge --getbinpkg --onlydeps -v =dev-util/bats-9999
 docker stop gentoo-bats
 ```
 
 The persistent `gentoo-bats` container is now configured with the ebuild's
-build and test dependencies and `sys-process/parallel` installed, and stopped.
+build and test dependencies installed, and stopped.
 
 ## Start the test container
 

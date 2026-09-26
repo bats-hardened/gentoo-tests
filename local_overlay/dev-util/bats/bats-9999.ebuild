@@ -18,6 +18,7 @@ SLOT="0"
 
 DEPEND="app-shells/bash:*"
 RDEPEND="${DEPEND}"
+BDEPEND="sys-process/parallel"
 
 src_test() {
 	local my_jobs=$(get_nproc)
@@ -45,4 +46,3 @@ src_install() {
 pkg_postinst() {
 	optfeature "Parallel Execution" sys-process/parallel
 }
-
