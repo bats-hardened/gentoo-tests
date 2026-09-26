@@ -14,25 +14,7 @@ It assumes:
 Run this from the host:
 
 ```bash
-docker run --rm \
-  -v "$PWD/gentoo-portage:/target" \
-  gentoo/portage:latest \
-  cp -a /var/db/repos/gentoo/. /target/
-
-docker image rm \
-  gentoo/portage:latest
-
-docker container create -it \
-  --name gentoo-bats \
-  -v "$PWD/etc-portage/repos.conf/local.conf:/etc/portage/repos.conf/local.conf" \
-  -v "$PWD/etc-portage/package.accept_keywords/bats:/etc/portage/package.accept_keywords/bats" \
-  -v "$PWD/gentoo-portage:/var/db/repos/gentoo" \
-  -v "$PWD/local_overlay:/var/db/repos/local" \
-  gentoo/stage3:latest
-
-docker start gentoo-bats
-docker exec gentoo-bats emerge --getbinpkg --onlydeps -v =dev-util/bats-9999
-docker stop gentoo-bats
+./setup.sh
 ```
 
 The persistent `gentoo-bats` container is now configured with the ebuild's
