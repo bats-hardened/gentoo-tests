@@ -41,11 +41,13 @@ on the host.
 Inside the container:
 
 ```bash
-FEATURES=test emerge -v =dev-util/bats-9999
+ebuild /var/db/repos/local/dev-util/bats/bats-9999.ebuild test
 ```
 
-This performs a normal Portage build/install and enables the ebuild's
-`src_test()` phase.
+This runs the phases required by `src_test()` without installing the package.
+
+> To install while running tests use:  
+> `FEATURES=test emerge -v =dev-util/bats-9999`
 
 ## Re-test after changing the ebuild
 
