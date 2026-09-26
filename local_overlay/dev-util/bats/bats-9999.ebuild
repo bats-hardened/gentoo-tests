@@ -25,6 +25,7 @@ src_test() {
 	# if ! command -v parallel >/dev/null; then
 	# 	my_jobs=1
 	# fi
+	printf "\n\n### Running bats tests with %i jobs ###\n\n" $my_jobs
 	bin/bats --tap --jobs "${my_jobs}" test || die "Tests failed"
 	# see https://github.com/bats-core/bats-core/issues/1225
 	# BATS_NUMBER_OF_PARALLEL_JOBS should be the same as "--jobs" as we had before
