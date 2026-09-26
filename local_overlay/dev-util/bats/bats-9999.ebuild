@@ -11,7 +11,7 @@ HOMEPAGE="https://github.com/bats-core/bats-core/"
 # EGIT_REPO_URI="https://github.com/bats-core/bats-core.git"
 # EGIT_BRANCH="master"
 EGIT_REPO_URI="https://github.com/bats-hardened/bats-core.git"
-EGIT_BRANCH="PR-review/fork/henning-schild/henning/staging0.ALTERNATIVE.new"
+EGIT_BRANCH="upstream-pr/10-support-parallel-self-tests-with---jobs"
 
 LICENSE="MIT"
 SLOT="0"
