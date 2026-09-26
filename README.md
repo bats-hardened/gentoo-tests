@@ -47,12 +47,6 @@ FEATURES=test emerge -v =dev-util/bats-9999
 This performs a normal Portage build/install and enables the ebuild's
 `src_test()` phase.
 
-To inspect the dependency/build plan without merging:
-
-```bash
-FEATURES=test emerge -pv =dev-util/bats-9999
-```
-
 ## Re-test after changing the ebuild
 
 Edit the ebuild on the host and then, inside `gentoo-bats`, run:
@@ -61,26 +55,14 @@ Edit the ebuild on the host and then, inside `gentoo-bats`, run:
 ebuild /var/db/repos/local/dev-util/bats/bats-9999.ebuild manifest
 ```
 
-Since this is a live `9999` ebuild using `git-r3`, Portage fetches the current
-upstream Git state as part of the build.
+before running the test again.
 
-To force a clean package build first:
+## Clean up
 
-```bash
-ebuild /var/db/repos/local/dev-util/bats/bats-9999.ebuild clean
-FEATURES=test emerge -v =dev-util/bats-9999
-```
-
-## Refresh the Gentoo repository snapshot
-
-To recreate the test environment using the current Gentoo images:
+Remove the container, Gentoo images, and the portage snapshot with:
 
 ```bash
 docker rm -f gentoo-bats 2>/dev/null || true
-rm -rf gentoo-portage
+docker image rm gentoo/stage3:latest
+sudo rm -rf gentoo-portage
 ```
-
-Then repeat the **First-time setup** commands.
-
-Removing the container and `gentoo-portage` directory does not affect the
-overlay files themselves.
