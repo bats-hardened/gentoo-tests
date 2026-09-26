@@ -1,7 +1,7 @@
-# Testing `local_overlay/dev-util` with Gentoo Docker images
+# Testing bats-core on Gentoo
 
-This directory is a small local Gentoo overlay for testing the live
-`local_overlay/dev-util` ebuild against the current `bats-core` development branch.
+This directory provides a Docker-based Gentoo environment for testing bats-core
+development branches through a live Gentoo ebuild.
 
 It assumes:
 
