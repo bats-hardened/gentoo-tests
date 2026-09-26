@@ -4,6 +4,8 @@ set -euo pipefail
 
 script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 
+echo "Creating local gentoo-portage folder"
+
 docker run --rm \
   -v "$script_dir/gentoo-portage:/target" \
   gentoo/portage:latest \
@@ -12,6 +14,8 @@ docker run --rm \
 docker image rm \
   gentoo/portage:latest
 
+echo "Creating gentoo-bats container"
+
 docker container create -it \
   --name gentoo-bats \
   -v "$script_dir/etc-portage/repos.conf/local.conf:/etc/portage/repos.conf/local.conf" \
@@ -19,6 +23,8 @@ docker container create -it \
   -v "$script_dir/gentoo-portage:/var/db/repos/gentoo" \
   -v "$script_dir/local_overlay:/var/db/repos/local" \
   gentoo/stage3:latest
+
+echo "Installing dependencies"
 
 docker start gentoo-bats
 docker exec gentoo-bats emerge --getbinpkg --onlydeps -v =dev-util/bats-9999
